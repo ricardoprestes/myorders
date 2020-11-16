@@ -26,8 +26,10 @@
     <Folder Include="Helpers\" />
     <Folder Include="Services\Abstractions\" />
     <Compile Include="Services\Abstractions\IApiFunctions.cs" />
+    <Compile Include="App.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Refit" Version="5.2.1" />
+    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1687" />
   </ItemGroup>
 </Project>

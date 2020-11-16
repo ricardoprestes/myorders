@@ -9,11 +9,11 @@ namespace MyOrders.Services.Abstractions
     [Headers("Content-Type: application/json")]
     public interface IApiFunctions
     {
-        [Get(Constants.URL_CATEGORY)]
+        [Get("/YNR2rsWe")]
         Task<List<Category>> GetCategories();
-        [Get(Constants.URL_SALE)]
+        [Get("/eVqp7pfX")]
         Task<List<Sale>> GetSales();
-        [Get(Constants.URL_PRODUCT)]
+        [Get("/R9cJFBtG")]
         Task<List<Product>> GetProducts();
     }
 }
