@@ -10,8 +10,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
     
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\Constants.cs" />
@@ -37,6 +41,8 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Helpers\BindableObject.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="Models\CartEntry.cs" />
+    <Compile Include="Models\Cart.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Refit" Version="5.2.1" />
