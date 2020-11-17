@@ -1,14 +1,16 @@
-﻿using MyOrders.Services;
+﻿using MyOrders.Helpers;
+using MyOrders.Services;
 using MyOrders.Services.Abstractions;
 using Xamarin.Forms;
 
 namespace MyOrders
 {
-    public static class App
+    public class App
     {
-        public static void StartUp()
+        public static void Initialize()
         {
-            DependencyService.RegisterSingleton<IApiService>(new ApiService());
+            //DependencyService.RegisterSingleton<IApiService>(new ApiService());
+            ServiceLocator.Instance.Register<IApiService, ApiService>();
         }
     }
 }

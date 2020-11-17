@@ -9,7 +9,7 @@ using Refit;
 
 namespace MyOrders.Services
 {
-    public class ApiService : IApiService
+    public sealed class ApiService : IApiService
     {
         readonly IApiFunctions _apiFunctions;
 

@@ -1,17 +1,19 @@
 using FluentAssertions;
+using MyOrders.Helpers;
 using MyOrders.Services;
+using MyOrders.Services.Abstractions;
 using Xunit;
 
 namespace MyOrders.Test
 {
     public class ApiServiceTest
     {
-        private readonly ApiService _apiService;
+        private readonly IApiService _apiService;
 
         public ApiServiceTest()
         {
-            App.StartUp();
-            _apiService = new ApiService();
+            App.Initialize();
+            _apiService = ServiceLocator.Instance.Get<IApiService>();
         }
 
         [Fact]

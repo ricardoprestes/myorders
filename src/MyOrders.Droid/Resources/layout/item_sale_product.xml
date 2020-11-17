@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="6dp"
+    >
+
+    <TextView
+        android:id="@+id/txv_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/item_header"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_item"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:padding="6dp"
+        android:elevation="6dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            >
+
+            <ImageView
+                android:id="@+id/img_item"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentLeft="true"/>
+
+            <LinearLayout
+                android:id="@+id/ll_actions"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_alignParentRight="true">
+
+                <ImageButton
+                    android:id="@+id/imb_favorite"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/star"
+                    android:scaleType = "fitCenter"
+                    android:adjustViewBounds="true"
+                    android:tint="#f2cb1d"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="right"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content" 
+                        android:layout_height="match_parent" 
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black"
+                        android:text="5"/>
+
+                    <TextView
+                        android:layout_marginLeft="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:alpha="0.4"
+                        android:textSize="12sp"
+                        android:text="UN"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal">                    
+
+                    <ImageButton
+                        android:background="@android:color/transparent"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/minus_circle_outline"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:layout_marginRight="8dp"
+                        android:tint="#4e7afc"/>
+
+                    <ImageButton
+                        android:background="@android:color/transparent"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/plus_circle_outline"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:layout_marginLeft="8dp"
+                        android:tint="#4e7afc"/>
+
+                </LinearLayout>
+
+                
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_toRightOf="@id/img_item"
+                android:layout_toLeftOf="@id/ll_actions">
+
+                <TextView
+                    android:id="@+id/txv_product_name"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Item"/>
+
+                <LinearLayout
+                    android:id="@+id/ll_discount"
+                    android:background="@android:color/holo_red_dark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp">
+
+                    <ImageView
+                        android:src="@drawable/arrow_down"
+                        android:tint="#ffffff"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"/>
+
+                    <TextView
+                        android:id="@+id/txv_discount"
+                        android:textColor="@android:color/white"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:layout_marginLeft="4dp"
+                        android:text="12,5%"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txv_product_price"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:gravity="bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="R$ 00,00"/>
+
+             </LinearLayout>
+
+            
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
