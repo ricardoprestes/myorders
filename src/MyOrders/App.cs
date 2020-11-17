@@ -1,7 +1,6 @@
 ﻿using MyOrders.Helpers;
 using MyOrders.Services;
 using MyOrders.Services.Abstractions;
-using Xamarin.Forms;
 
 namespace MyOrders
 {
@@ -9,8 +8,9 @@ namespace MyOrders
     {
         public static void Initialize()
         {
-            //DependencyService.RegisterSingleton<IApiService>(new ApiService());
             ServiceLocator.Instance.Register<IApiService, ApiService>();
+            ServiceLocator.Instance.Register<IProductService, ProductService>();
+            ServiceLocator.Instance.Register<ICartService, CartService>();
         }
     }
 }

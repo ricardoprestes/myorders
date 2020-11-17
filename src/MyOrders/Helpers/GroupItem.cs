@@ -8,5 +8,7 @@ namespace MyOrders.Helpers
         public EGroupItemType Type { get; set; }
         public Sale Sale { get; set; }
         public Product Product { get; set; }
+        public int Count { get; set; }
+        public decimal Discount { get; set; }
     }
 }

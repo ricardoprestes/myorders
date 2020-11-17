@@ -55,6 +55,15 @@ namespace MyOrders.Droid.Adapters
 
                 vh.TxvProductName.Text = item.Product.Name;
                 vh.TxvProductPrice.Text = item.Product.Price.ToString("R$ ###,###,###,##0.00");
+                vh.TxvAmount.Text = item.Count.ToString();
+                if(item.Discount > 0)
+                {
+                    vh.TxvDiscount.Text = $"{item.Discount.ToString("##0.0")}%";
+                    vh.LlDiscount.Visibility = ViewStates.Visible;
+                }
+                else
+                    vh.LlDiscount.Visibility = ViewStates.Invisible;
+
                 vh.CardItem.Visibility = ViewStates.Visible;
                 vh.TxtHeader.Visibility = ViewStates.Gone;
             }
@@ -67,22 +76,44 @@ namespace MyOrders.Droid.Adapters
     {
         public TextView TxtHeader { get; set; }
         public CardView CardItem { get; set; }
+
         public ImageView ImgItem { get; set; }
+
+        public LinearLayout LlDiscount { get; set; }
         public TextView TxvProductName { get; set; }
+        public TextView TxvDiscount { get; set; }
         public TextView TxvProductPrice { get; set; }
+
         public ImageButton ImbFavorite { get; set; }
+
+        public TextView TxvAmount { get; set; }
+        public ImageButton ImbRemoveItem { get; set; }
+        public ImageButton ImbAddItem { get; set; }
 
         public SaleProductViewHolder(View itemView, Action<RecyclerClickEventArgs> clickListener,
                             Action<RecyclerClickEventArgs> longClickListener) : base(itemView)
         {
             TxtHeader = itemView.FindViewById<TextView>(Resource.Id.txv_header);
             CardItem = itemView.FindViewById<CardView>(Resource.Id.card_item);
+
+            LlDiscount = itemView.FindViewById<LinearLayout>(Resource.Id.ll_discount);
             TxvProductName = itemView.FindViewById<TextView>(Resource.Id.txv_product_name);
+            TxvDiscount = itemView.FindViewById<TextView>(Resource.Id.txv_discount);
             TxvProductPrice = itemView.FindViewById<TextView>(Resource.Id.txv_product_price);
+
             ImgItem = itemView.FindViewById<ImageView>(Resource.Id.img_item);
+
             ImbFavorite = itemView.FindViewById<ImageButton>(Resource.Id.imb_favorite);
 
+            TxvAmount = itemView.FindViewById<TextView>(Resource.Id.txv_amount);
+            ImbRemoveItem = itemView.FindViewById<ImageButton>(Resource.Id.img_remove_item);
+            ImbAddItem = itemView.FindViewById<ImageButton>(Resource.Id.imb_add_item);
+
             ImbFavorite.Click += (sender, e) => clickListener(new RecyclerClickEventArgs { View = ImbFavorite, Position = AdapterPosition });
+
+            ImbRemoveItem.Click += (sender, e) => clickListener(new RecyclerClickEventArgs { View = ImbRemoveItem, Position = AdapterPosition });
+            ImbAddItem.Click += (sender, e) => clickListener(new RecyclerClickEventArgs { View = ImbAddItem, Position = AdapterPosition });
+
             itemView.Click += (sender, e) => clickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
             itemView.LongClick += (sender, e) => longClickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
         }

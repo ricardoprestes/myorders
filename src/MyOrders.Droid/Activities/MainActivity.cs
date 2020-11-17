@@ -30,7 +30,9 @@ namespace MyOrders.Droid.Activities
             base.OnCreate(savedInstanceState);
 
             var apiService = ServiceLocator.Instance.Get<IApiService>();
-            ViewModel = new MainViewModel(apiService);
+            var productService = ServiceLocator.Instance.Get<IProductService>();
+            var cartService = ServiceLocator.Instance.Get<ICartService>();
+            ViewModel = new MainViewModel(apiService, productService, cartService);
             Toolbar.Title = ViewModel.Title;
 
             var recyclerView = FindViewById<RecyclerView>(Resource.Id.rv_items);
@@ -69,10 +71,18 @@ namespace MyOrders.Droid.Activities
             if (item.Type == Enums.EGroupItemType.Header)
                 return;
 
-            if(e.View.Id == Resource.Id.imb_favorite)
+            switch (e.View.Id)
             {
-
+                case Resource.Id.imb_favorite:
+                    break;
+                case Resource.Id.img_remove_item:
+                    ViewModel.RemoveProduct(item.Product);
+                    break;
+                case Resource.Id.imb_add_item:
+                    ViewModel.AddProduct(item.Product);
+                    break;
             }
+            _adapter.NotifyItemChanged(e.Position);
         }
 
         private async Task LoadItemsAsync()
