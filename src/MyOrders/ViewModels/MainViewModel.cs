@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,17 +13,25 @@ namespace MyOrders.ViewModels
     {
         private readonly IApiService _apiService;
         private readonly IProductService _productService;
+        private readonly ICartService _cartService;
 
         public Cart Cart { get; set; }
         public ObservableCollection<GroupItem> Items { get; set; }
+        public List<Sale> Sales { get; set; }
+        public List<Product> Products { get; set; }
 
         public MainViewModel(IApiService apiService,
-                             IProductService productService)
+                             IProductService productService,
+                             ICartService cartService)
         {
             _apiService = apiService;
             _productService = productService;
+            _cartService = cartService;
+
             Cart = new Cart();
             Items = new ObservableCollection<GroupItem>();
+            Sales = new List<Sale>();
+            Products = new List<Product>();
             Title = "Catálogo";
         }
 
@@ -35,11 +44,11 @@ namespace MyOrders.ViewModels
 
             try
             {
-                var sales = await _apiService.GetSales();
-                var products = await _apiService.GetProducts();
+                Sales = await _apiService.GetSales();
+                Products = await _apiService.GetProducts();
 
                 Items.Clear();
-                var items = await _productService.GetGroupedProducts(sales, products);
+                var items = await _productService.GetGroupedProducts(Sales, Products);
                 foreach (var item in items)
                 {
                     Items.Add(item);
@@ -62,6 +71,10 @@ namespace MyOrders.ViewModels
                 return;
 
             item.Count++;
+            _cartService.AddProduct(Cart, product);
+            var sale = Sales.FirstOrDefault(s => s.CategoryId == product.CategoryId);
+            if(sale is not null)
+                item.Discount = _cartService.ApplyDiscount(Cart, product, sale);
         }
 
         public void RemoveProduct(Product product)
@@ -71,7 +84,13 @@ namespace MyOrders.ViewModels
                 return;
 
             if (item.Count > 0)
+            {
                 item.Count--;
+                _cartService.RemoveProduct(Cart, product);
+                var sale = Sales.FirstOrDefault(s => s.CategoryId == product.CategoryId);
+                if (sale is not null)
+                    item.Discount = _cartService.ApplyDiscount(Cart, product, sale);
+            }
         }
     }
 }

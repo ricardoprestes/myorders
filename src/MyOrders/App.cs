@@ -10,6 +10,7 @@ namespace MyOrders
         {
             ServiceLocator.Instance.Register<IApiService, ApiService>();
             ServiceLocator.Instance.Register<IProductService, ProductService>();
+            ServiceLocator.Instance.Register<ICartService, CartService>();
         }
     }
 }

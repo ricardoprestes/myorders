@@ -43,6 +43,8 @@
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="Models\CartEntry.cs" />
     <Compile Include="Models\Cart.cs" />
+    <Compile Include="Services\Abstractions\ICartService.cs" />
+    <Compile Include="Services\CartService.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Refit" Version="5.2.1" />

@@ -56,6 +56,13 @@ namespace MyOrders.Droid.Adapters
                 vh.TxvProductName.Text = item.Product.Name;
                 vh.TxvProductPrice.Text = item.Product.Price.ToString("R$ ###,###,###,##0.00");
                 vh.TxvAmount.Text = item.Count.ToString();
+                if(item.Discount > 0)
+                {
+                    vh.TxvDiscount.Text = $"{item.Discount.ToString("##0.0")}%";
+                    vh.LlDiscount.Visibility = ViewStates.Visible;
+                }
+                else
+                    vh.LlDiscount.Visibility = ViewStates.Invisible;
 
                 vh.CardItem.Visibility = ViewStates.Visible;
                 vh.TxtHeader.Visibility = ViewStates.Gone;
@@ -72,7 +79,9 @@ namespace MyOrders.Droid.Adapters
 
         public ImageView ImgItem { get; set; }
 
+        public LinearLayout LlDiscount { get; set; }
         public TextView TxvProductName { get; set; }
+        public TextView TxvDiscount { get; set; }
         public TextView TxvProductPrice { get; set; }
 
         public ImageButton ImbFavorite { get; set; }
@@ -87,7 +96,9 @@ namespace MyOrders.Droid.Adapters
             TxtHeader = itemView.FindViewById<TextView>(Resource.Id.txv_header);
             CardItem = itemView.FindViewById<CardView>(Resource.Id.card_item);
 
+            LlDiscount = itemView.FindViewById<LinearLayout>(Resource.Id.ll_discount);
             TxvProductName = itemView.FindViewById<TextView>(Resource.Id.txv_product_name);
+            TxvDiscount = itemView.FindViewById<TextView>(Resource.Id.txv_discount);
             TxvProductPrice = itemView.FindViewById<TextView>(Resource.Id.txv_product_price);
 
             ImgItem = itemView.FindViewById<ImageView>(Resource.Id.img_item);

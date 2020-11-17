@@ -18,7 +18,8 @@
         android:id="@+id/card_item"
         android:background="@android:color/white"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
+        android:minHeight="100dp"
         android:padding="6dp"
         android:elevation="6dp">
 

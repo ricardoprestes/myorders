@@ -31,7 +31,8 @@ namespace MyOrders.Droid.Activities
 
             var apiService = ServiceLocator.Instance.Get<IApiService>();
             var productService = ServiceLocator.Instance.Get<IProductService>();
-            ViewModel = new MainViewModel(apiService, productService);
+            var cartService = ServiceLocator.Instance.Get<ICartService>();
+            ViewModel = new MainViewModel(apiService, productService, cartService);
             Toolbar.Title = ViewModel.Title;
 
             var recyclerView = FindViewById<RecyclerView>(Resource.Id.rv_items);
