@@ -169,6 +169,8 @@
     <Compile Include="MainApplication.cs" />
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Activities\BaseActivity.cs" />
+    <Compile Include="Helpers\BaseRecycleViewAdapter.cs" />
+    <Compile Include="Adapters\SaleProductAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -192,6 +194,10 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\item_sale_product.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyOrders\MyOrders.csproj">
@@ -201,6 +207,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Activities\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Adapters\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Refit.5.2.1\build\netstandard2.0\refit.targets" Condition="Exists('..\packages\Refit.5.2.1\build\netstandard2.0\refit.targets')" />

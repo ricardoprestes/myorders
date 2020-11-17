@@ -10,6 +10,6 @@ namespace MyOrders.Models
         public string Photo { get; set; }
         public decimal Price { get; set; }
         [JsonProperty("category_id")]
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
     }
 }

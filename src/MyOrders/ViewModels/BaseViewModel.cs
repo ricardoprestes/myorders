@@ -2,7 +2,7 @@
 
 namespace MyOrders.ViewModels
 {
-    public class BaseViewModel : BindableObject
+    public abstract class BaseViewModel : BindableObject
     {
         bool isBusy = false;
         public bool IsBusy

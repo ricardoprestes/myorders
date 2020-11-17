@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using MyOrders.Helpers;
@@ -11,12 +11,12 @@ namespace MyOrders.ViewModels
     {
         private readonly IApiService _apiService;
 
-        public List<GroupItem> Items { get; set; }
+        public ObservableCollection<GroupItem> Items { get; set; }
 
         public MainViewModel(IApiService apiService)
         {
             _apiService = apiService;
-            Items = new List<GroupItem>();
+            Items = new ObservableCollection<GroupItem>();
             Title = "Catálogo";
         }
 
@@ -36,7 +36,7 @@ namespace MyOrders.ViewModels
 
                 foreach (var sale in sales)
                 {
-                    var salesProducts = products.Where(p => p.CategoryId == sale.CategoryId);
+                    var salesProducts = products.Where(p => p.CategoryId.HasValue && p.CategoryId.Value == sale.CategoryId);
                     if (salesProducts.Any())
                     {
                         Items.Add(new GroupItem { Type = Enums.EGroupItemType.Header, Sale = sale });
