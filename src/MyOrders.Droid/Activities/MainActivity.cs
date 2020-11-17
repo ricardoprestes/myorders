@@ -24,6 +24,8 @@ namespace MyOrders.Droid.Activities
 
         SwipeRefreshLayout _refresh;
         SaleProductAdapter _adapter;
+        LinearLayout _llCartValue;
+        Button _btnBuy;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -34,6 +36,9 @@ namespace MyOrders.Droid.Activities
             var cartService = ServiceLocator.Instance.Get<ICartService>();
             ViewModel = new MainViewModel(apiService, productService, cartService);
             Toolbar.Title = ViewModel.Title;
+
+            _llCartValue = FindViewById<LinearLayout>(Resource.Id.ll_cart_value);
+            _btnBuy = FindViewById<Button>(Resource.Id.btn_buy);
 
             var recyclerView = FindViewById<RecyclerView>(Resource.Id.rv_items);
             recyclerView.HasFixedSize = true;
@@ -46,6 +51,7 @@ namespace MyOrders.Droid.Activities
         protected override async void OnStart()
         {
             base.OnStart();
+            ShowCartValue();
             await LoadItemsAsync().ConfigureAwait(false);
 
             _refresh.Refresh += OnRefresh;
@@ -83,6 +89,7 @@ namespace MyOrders.Droid.Activities
                     break;
             }
             _adapter.NotifyItemChanged(e.Position);
+            ShowCartValue();
         }
 
         private async Task LoadItemsAsync()
@@ -96,6 +103,18 @@ namespace MyOrders.Droid.Activities
         async Task OnRefreshAsync()
         {
             await LoadItemsAsync().ConfigureAwait(false);
+        }
+
+        void ShowCartValue()
+        {
+            var value = ViewModel.Cart.Total;
+            if (value > 0)
+            {
+                _llCartValue.Visibility = Android.Views.ViewStates.Visible;
+                _btnBuy.Text = $"Comprar {value:R$ ###,###,##0.00}";
+            }
+            else
+                _llCartValue.Visibility = Android.Views.ViewStates.Gone;
         }
     }
 }
