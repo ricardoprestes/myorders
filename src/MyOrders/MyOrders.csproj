@@ -27,6 +27,12 @@
     <Folder Include="Services\Abstractions\" />
     <Compile Include="Services\Abstractions\IApiFunctions.cs" />
     <Compile Include="App.cs" />
+    <Compile Include="Services\Abstractions\IProductService.cs" />
+    <Compile Include="Services\ProductService.cs" />
+    <Compile Include="Helpers\GroupItem.cs" />
+    <Folder Include="Enums\" />
+    <Compile Include="Enums\EGroupItemType.cs" />
+    <Compile Include="Helpers\ServiceLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Refit" Version="5.2.1" />
