@@ -11,9 +11,9 @@ namespace MyOrders.Services.Abstractions
     {
         [Get("/YNR2rsWe")]
         Task<List<Category>> GetCategories();
-        [Get("/eVqp7pfX")]
-        Task<List<Sale>> GetSales();
         [Get("/R9cJFBtG")]
+        Task<List<Sale>> GetSales();
+        [Get("/eVqp7pfX")]
         Task<List<Product>> GetProducts();
     }
 }

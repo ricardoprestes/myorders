@@ -33,6 +33,10 @@
     <Folder Include="Enums\" />
     <Compile Include="Enums\EGroupItemType.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
+    <Folder Include="ViewModels\" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="Helpers\BindableObject.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Refit" Version="5.2.1" />
