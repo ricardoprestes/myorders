@@ -15,8 +15,10 @@
                 if (Product is not null)
                 {
                     result = Product.Price * Amount;
+                    var discountValue = 0m;
                     if (Discount > 0)
-                        result = result * Discount / 100;
+                        discountValue = result * Discount / 100;
+                    result -= discountValue;
                 }
                 return result;
             }
