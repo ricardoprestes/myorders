@@ -53,7 +53,8 @@ namespace MyOrders.Droid.Adapters
                    //.ErrorPlaceholder(Config.ErrorPlaceholderPath, FFImageLoading.Work.ImageSource.ApplicationBundle)
                    .Into(vh.ImgItem);
 
-                vh.TxtProductName.Text = item.Product.Name;
+                vh.TxvProductName.Text = item.Product.Name;
+                vh.TxvProductPrice.Text = item.Product.Price.ToString("R$ ###,###,###,##0.00");
                 vh.CardItem.Visibility = ViewStates.Visible;
                 vh.TxtHeader.Visibility = ViewStates.Gone;
             }
@@ -66,15 +67,17 @@ namespace MyOrders.Droid.Adapters
     {
         public TextView TxtHeader { get; set; }
         public CardView CardItem { get; set; }
-        public TextView TxtProductName { get; set; }
+        public TextView TxvProductName { get; set; }
         public ImageView ImgItem { get; set; }
+        public TextView TxvProductPrice { get; set; }
 
         public SaleProductViewHolder(View itemView, Action<RecyclerClickEventArgs> clickListener,
                             Action<RecyclerClickEventArgs> longClickListener) : base(itemView)
         {
             TxtHeader = itemView.FindViewById<TextView>(Resource.Id.txv_header);
             CardItem = itemView.FindViewById<CardView>(Resource.Id.card_item);
-            TxtProductName = itemView.FindViewById<TextView>(Resource.Id.txv_product_name);
+            TxvProductName = itemView.FindViewById<TextView>(Resource.Id.txv_product_name);
+            TxvProductPrice = itemView.FindViewById<TextView>(Resource.Id.txv_product_price);
             ImgItem = itemView.FindViewById<ImageView>(Resource.Id.img_item);
 
             itemView.Click += (sender, e) => clickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
