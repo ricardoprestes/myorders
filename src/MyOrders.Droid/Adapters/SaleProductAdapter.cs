@@ -67,9 +67,10 @@ namespace MyOrders.Droid.Adapters
     {
         public TextView TxtHeader { get; set; }
         public CardView CardItem { get; set; }
-        public TextView TxvProductName { get; set; }
         public ImageView ImgItem { get; set; }
+        public TextView TxvProductName { get; set; }
         public TextView TxvProductPrice { get; set; }
+        public ImageButton ImbFavorite { get; set; }
 
         public SaleProductViewHolder(View itemView, Action<RecyclerClickEventArgs> clickListener,
                             Action<RecyclerClickEventArgs> longClickListener) : base(itemView)
@@ -79,7 +80,9 @@ namespace MyOrders.Droid.Adapters
             TxvProductName = itemView.FindViewById<TextView>(Resource.Id.txv_product_name);
             TxvProductPrice = itemView.FindViewById<TextView>(Resource.Id.txv_product_price);
             ImgItem = itemView.FindViewById<ImageView>(Resource.Id.img_item);
+            ImbFavorite = itemView.FindViewById<ImageButton>(Resource.Id.imb_favorite);
 
+            ImbFavorite.Click += (sender, e) => clickListener(new RecyclerClickEventArgs { View = ImbFavorite, Position = AdapterPosition });
             itemView.Click += (sender, e) => clickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
             itemView.LongClick += (sender, e) => longClickListener(new RecyclerClickEventArgs { View = itemView, Position = AdapterPosition });
         }

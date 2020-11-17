@@ -47,17 +47,32 @@ namespace MyOrders.Droid.Activities
             await LoadItemsAsync().ConfigureAwait(false);
 
             _refresh.Refresh += OnRefresh;
+            _adapter.ItemClick += OnItemClick;
         }
+
 
         protected override void OnStop()
         {
             base.OnStop();
             _refresh.Refresh -= OnRefresh;
+            _adapter.ItemClick -= OnItemClick;
         }
 
         private async void OnRefresh(object sender, System.EventArgs e)
         {
             await OnRefreshAsync();
+        }
+
+        private void OnItemClick(object sender, Helpers.RecyclerClickEventArgs e)
+        {
+            var item = ViewModel.Items[e.Position];
+            if (item.Type == Enums.EGroupItemType.Header)
+                return;
+
+            if(e.View.Id == Resource.Id.imb_favorite)
+            {
+
+            }
         }
 
         private async Task LoadItemsAsync()

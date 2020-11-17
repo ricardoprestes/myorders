@@ -18,33 +18,36 @@
         android:id="@+id/card_item"
         android:background="@android:color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:padding="6dp"
         android:elevation="6dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="8dp"
             >
 
             <ImageView
                 android:id="@+id/img_item"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_alignParentLeft="true"/>
 
             <LinearLayout
                 android:id="@+id/ll_actions"
                 android:layout_width="100dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_alignParentRight="true">
 
-                <ImageView
+                <ImageButton
+                    android:id="@+id/imb_favorite"
                     android:background="@android:color/transparent"
                     android:src="@drawable/star"
-                    android:tint="#4A4A4A"
-                    android:padding="2dp"
+                    android:scaleType = "fitCenter"
+                    android:adjustViewBounds="true"
+                    android:tint="#f2cb1d"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="right"/>
@@ -56,8 +59,9 @@
                     android:gravity="center_horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content" 
+                        android:layout_height="match_parent" 
+                        android:gravity="center"
                         android:textStyle="bold"
                         android:textSize="14sp"
                         android:textColor="@android:color/black"
@@ -78,25 +82,38 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_horizontal">
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal">                    
 
-                    <Button
-                        android:layout_width="50dp"
-                        android:layout_height="40dp"
-                        android:text="-"/>
+                    <ImageButton
+                        android:background="@android:color/transparent"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/minus_circle_outline"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:layout_marginRight="8dp"
+                        android:tint="#4e7afc"/>
 
-                    <Button
-                        android:layout_width="50dp"
-                        android:layout_height="40dp"
-                        android:text="+"/>
+                    <ImageButton
+                        android:background="@android:color/transparent"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/plus_circle_outline"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:layout_marginLeft="8dp"
+                        android:tint="#4e7afc"/>
 
                 </LinearLayout>
+
+                
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_toRightOf="@id/img_item"
                 android:layout_toLeftOf="@id/ll_actions">
@@ -115,6 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:padding="4dp"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp">
@@ -140,6 +158,7 @@
                     android:layout_marginTop="4dp"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
+                    android:gravity="bottom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="R$ 00,00"/>
