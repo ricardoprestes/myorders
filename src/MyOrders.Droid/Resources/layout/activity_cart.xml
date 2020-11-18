@@ -37,7 +37,7 @@
     <LinearLayout
         android:id="@+id/ll_cart_value"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:padding="8dp"
         android:layout_above="@id/ll_finish"
         android:orientation="vertical">
@@ -51,22 +51,31 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="1dp"
+            android:background="@android:color/black"
+            android:alpha="0.4"/>
+
+        <RelativeLayout
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TOTAL"
-                android:gravity="start"/>
+                android:text="Total"
+                android:layout_alignParentLeft="true"/>
 
             <TextView
                 android:id="@+id/txv_total_value"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="R$ 0,00"
-                android:gravity="end"/>
-        </LinearLayout>
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
 
     </LinearLayout>
 
