@@ -83,6 +83,7 @@ namespace MyOrders.ViewModels
                     entry.Discount = item.Discount;
                 }
             }
+            item.Product.Favorite = Preferences.ContainsKey(item.Product.ProductKey);
         }
 
         public void AddProduct(Product product)
@@ -122,6 +123,16 @@ namespace MyOrders.ViewModels
         {
             var json = JsonConvert.SerializeObject(Cart);
             Preferences.Set(Constants.CART, json);
+        }
+
+
+        public void SetFavorite(Product product)
+        {
+            product.Favorite = !product.Favorite;
+            if (product.Favorite)
+                Preferences.Set(product.ProductKey, true);
+            else
+                Preferences.Remove(product.ProductKey);
         }
     }
 }

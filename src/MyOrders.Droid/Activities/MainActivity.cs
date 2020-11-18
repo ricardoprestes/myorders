@@ -95,6 +95,7 @@ namespace MyOrders.Droid.Activities
             switch (e.View.Id)
             {
                 case Resource.Id.imb_favorite:
+                    ViewModel.SetFavorite(item.Product);
                     break;
                 case Resource.Id.img_remove_item:
                     ViewModel.RemoveProduct(item.Product);
