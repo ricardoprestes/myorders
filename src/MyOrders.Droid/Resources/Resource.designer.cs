@@ -2580,37 +2580,40 @@ namespace MyOrders.Droid
 			public const int activity_main = 2131296285;
 			
 			// aapt resource value: 0x7F09001E
-			public const int item_sale_product = 2131296286;
+			public const int item_cart = 2131296286;
 			
 			// aapt resource value: 0x7F09001F
-			public const int notification_action = 2131296287;
+			public const int item_sale_product = 2131296287;
 			
 			// aapt resource value: 0x7F090020
-			public const int notification_action_tombstone = 2131296288;
+			public const int notification_action = 2131296288;
 			
 			// aapt resource value: 0x7F090021
-			public const int notification_template_custom_big = 2131296289;
+			public const int notification_action_tombstone = 2131296289;
 			
 			// aapt resource value: 0x7F090022
-			public const int notification_template_icon_group = 2131296290;
+			public const int notification_template_custom_big = 2131296290;
 			
 			// aapt resource value: 0x7F090023
-			public const int notification_template_part_chronometer = 2131296291;
+			public const int notification_template_icon_group = 2131296291;
 			
 			// aapt resource value: 0x7F090024
-			public const int notification_template_part_time = 2131296292;
+			public const int notification_template_part_chronometer = 2131296292;
 			
 			// aapt resource value: 0x7F090025
-			public const int select_dialog_item_material = 2131296293;
+			public const int notification_template_part_time = 2131296293;
 			
 			// aapt resource value: 0x7F090026
-			public const int select_dialog_multichoice_material = 2131296294;
+			public const int select_dialog_item_material = 2131296294;
 			
 			// aapt resource value: 0x7F090027
-			public const int select_dialog_singlechoice_material = 2131296295;
+			public const int select_dialog_multichoice_material = 2131296295;
 			
 			// aapt resource value: 0x7F090028
-			public const int support_simple_spinner_dropdown_item = 2131296296;
+			public const int select_dialog_singlechoice_material = 2131296296;
+			
+			// aapt resource value: 0x7F090029
+			public const int support_simple_spinner_dropdown_item = 2131296297;
 			
 			static Layout()
 			{

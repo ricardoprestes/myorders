@@ -79,4 +79,15 @@
 
     </LinearLayout>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_items"
+        android:scrollbars="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        app:layoutManager="GridLayoutManager"
+        android:paddingTop="12dp"
+        android:layout_below="@id/toolbar"
+        android:layout_above="@id/ll_cart_value"
+        />
+
 </RelativeLayout>

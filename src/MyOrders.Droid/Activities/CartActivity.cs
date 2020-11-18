@@ -1,7 +1,9 @@
 ﻿using Android.App;
 using Android.OS;
+using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
+using MyOrders.Droid.Adapters;
 using MyOrders.ViewModels;
 
 namespace MyOrders.Droid.Activities
@@ -13,6 +15,7 @@ namespace MyOrders.Droid.Activities
         public CartViewModel ViewModel { get; set; }
 
         TextView _txvAmount, _txvTotalValue;
+        CartEntryAdapter _adapter;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -25,6 +28,10 @@ namespace MyOrders.Droid.Activities
 
             _txvAmount = FindViewById<TextView>(Resource.Id.txv_amount);
             _txvTotalValue = FindViewById<TextView>(Resource.Id.txv_total_value);
+
+            var recyclerView = FindViewById<RecyclerView>(Resource.Id.rv_items);
+            recyclerView.HasFixedSize = true;
+            recyclerView.SetAdapter(_adapter = new CartEntryAdapter(this, ViewModel));
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -44,6 +51,7 @@ namespace MyOrders.Droid.Activities
             base.OnStart();
             _txvAmount.Text = $"{App.Cart.Count} UN";
             _txvTotalValue.Text = $"{App.Cart.Total:R$ ###,###,##0.00}";
+            ViewModel.LoadItems();
         }
     }
 }
