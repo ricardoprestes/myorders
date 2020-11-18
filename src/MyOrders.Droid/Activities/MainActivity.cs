@@ -1,15 +1,14 @@
-﻿using Android.App;
-using Android.Widget;
+﻿using System.Threading.Tasks;
+using Android.App;
+using Android.Content;
 using Android.OS;
-using MyOrders.ViewModels;
-using MyOrders.Helpers;
-using MyOrders.Services.Abstractions;
-using System.Linq;
-using System.Threading.Tasks;
 using Android.Support.V4.Widget;
 using Android.Support.V7.Widget;
+using Android.Widget;
 using MyOrders.Droid.Adapters;
-using Android.Content;
+using MyOrders.Helpers;
+using MyOrders.Services.Abstractions;
+using MyOrders.ViewModels;
 
 namespace MyOrders.Droid.Activities
 {
@@ -33,6 +32,7 @@ namespace MyOrders.Droid.Activities
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 
             var apiService = ServiceLocator.Instance.Get<IApiService>();
             var productService = ServiceLocator.Instance.Get<IProductService>();
@@ -110,8 +110,7 @@ namespace MyOrders.Droid.Activities
         private async Task LoadItemsAsync()
         {
             _refresh.Refreshing = true;
-            if (!ViewModel.Items.Any())
-                await ViewModel.LoadItemsAsync();
+            await ViewModel.LoadItemsAsync();
             _refresh.Refreshing = false;
         }
 
@@ -122,7 +121,7 @@ namespace MyOrders.Droid.Activities
 
         void ShowCartValue()
         {
-            var value = App.Cart.Total;
+            var value = ViewModel.Cart.Total;
             if (value > 0)
             {
                 _llCartValue.Visibility = Android.Views.ViewStates.Visible;

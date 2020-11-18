@@ -7,6 +7,7 @@ using MyOrders.Helpers;
 using MyOrders.Models;
 using MyOrders.Services.Abstractions;
 using Newtonsoft.Json;
+using Xamarin.Essentials;
 
 namespace MyOrders.ViewModels
 {
@@ -19,6 +20,7 @@ namespace MyOrders.ViewModels
         public ObservableCollection<GroupItem> Items { get; set; }
         public List<Sale> Sales { get; set; }
         public List<Product> Products { get; set; }
+        public Cart Cart { get; set; }
 
         public MainViewModel(IApiService apiService,
                              IProductService productService,
@@ -32,6 +34,7 @@ namespace MyOrders.ViewModels
             Sales = new List<Sale>();
             Products = new List<Product>();
             Title = "Catálogo";
+            Cart = _cartService.GetCart();
         }
 
         public async Task LoadItemsAsync()
@@ -40,6 +43,7 @@ namespace MyOrders.ViewModels
                 return;
 
             IsBusy = true;
+            Cart = _cartService.GetCart();
 
             try
             {
@@ -50,6 +54,9 @@ namespace MyOrders.ViewModels
                 var items = await _productService.GetGroupedProducts(Sales, Products);
                 foreach (var item in items)
                 {
+                    if (item.Type == Enums.EGroupItemType.Product)
+                        ValidatedProductCartEntry(item);
+
                     Items.Add(item);
                 }
             }
@@ -63,6 +70,21 @@ namespace MyOrders.ViewModels
             }
         }
 
+        private void ValidatedProductCartEntry(GroupItem item)
+        {
+            var entry = Cart.Entries.FirstOrDefault(e => e.ProductId == item.Product.Id);
+            if (entry is not null)
+            {
+                item.Count = entry.Amount;
+                var sale = Sales.FirstOrDefault(s => s.CategoryId == item.Product.CategoryId);
+                if (sale is not null)
+                {
+                    item.Discount = _cartService.ApplyDiscount(Cart, item.Product, sale);
+                    entry.Discount = item.Discount;
+                }
+            }
+        }
+
         public void AddProduct(Product product)
         {
             var item = Items.FirstOrDefault(i => i.Type == Enums.EGroupItemType.Product && i.Product.Id == product.Id);
@@ -70,10 +92,10 @@ namespace MyOrders.ViewModels
                 return;
 
             item.Count++;
-            _cartService.AddProduct(App.Cart, product);
+            _cartService.AddProduct(Cart, product);
             var sale = Sales.FirstOrDefault(s => s.CategoryId == product.CategoryId);
             if (sale is not null)
-                item.Discount = _cartService.ApplyDiscount(App.Cart, product, sale);
+                item.Discount = _cartService.ApplyDiscount(Cart, product, sale);
 
             SaveCartData();
         }
@@ -87,10 +109,10 @@ namespace MyOrders.ViewModels
             if (item.Count > 0)
             {
                 item.Count--;
-                _cartService.RemoveProduct(App.Cart, product);
+                _cartService.RemoveProduct(Cart, product);
                 var sale = Sales.FirstOrDefault(s => s.CategoryId == product.CategoryId);
                 if (sale is not null)
-                    item.Discount = _cartService.ApplyDiscount(App.Cart, product, sale);
+                    item.Discount = _cartService.ApplyDiscount(Cart, product, sale);
 
                 SaveCartData();
             }
@@ -98,17 +120,8 @@ namespace MyOrders.ViewModels
 
         private void SaveCartData()
         {
-            var json = JsonConvert.SerializeObject(App.
-                Cart);
-            //Preferences.Set(Constants.CART, json);
-        }
-
-        Cart GetCart()
-        {
-            //if (Preferences.ContainsKey(Constants.CART))
-            //    return JsonConvert.DeserializeObject<Cart>(Preferences.Get(Constants.CART, string.Empty));
-
-            return new Cart();
+            var json = JsonConvert.SerializeObject(Cart);
+            Preferences.Set(Constants.CART, json);
         }
     }
 }

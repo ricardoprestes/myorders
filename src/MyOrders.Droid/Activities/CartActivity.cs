@@ -5,6 +5,8 @@ using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using MyOrders.Droid.Adapters;
+using MyOrders.Helpers;
+using MyOrders.Services.Abstractions;
 using MyOrders.ViewModels;
 
 namespace MyOrders.Droid.Activities
@@ -23,7 +25,8 @@ namespace MyOrders.Droid.Activities
         {
             base.OnCreate(savedInstanceState);
 
-            ViewModel = new CartViewModel();
+            var cartService = ServiceLocator.Instance.Get<ICartService>();
+            ViewModel = new CartViewModel(cartService);
             Toolbar.Title = ViewModel.Title;
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
@@ -42,7 +45,6 @@ namespace MyOrders.Droid.Activities
             switch (item.ItemId)
             {
                 case Android.Resource.Id.Home:
-                    OnBackPressed();
                     Finish();
                     return true;
             }
@@ -52,8 +54,8 @@ namespace MyOrders.Droid.Activities
         protected override void OnStart()
         {
             base.OnStart();
-            _txvAmount.Text = $"{App.Cart.Count} UN";
-            _txvTotalValue.Text = $"{App.Cart.Total:R$ ###,###,##0.00}";
+            _txvAmount.Text = $"{ViewModel.Cart.Count} UN";
+            _txvTotalValue.Text = $"{ViewModel.Cart.Total:R$ ###,###,##0.00}";
             ViewModel.LoadItems();
             if (!_subscribeEvents)
             {
@@ -91,7 +93,7 @@ namespace MyOrders.Droid.Activities
 
         private void FinishOrder()
         {
-            App.Cart = new Models.Cart();
+            ViewModel.ClearCart();
             Finish();
         }
     }

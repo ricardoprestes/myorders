@@ -1,17 +1,24 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using MyOrders.Models;
+using MyOrders.Services.Abstractions;
 
 namespace MyOrders.ViewModels
 {
     public class CartViewModel : BaseViewModel
     {
-        public ObservableCollection<CartEntry> Items { get; set; }
+        private readonly ICartService _cartService;
 
-        public CartViewModel()
+        public ObservableCollection<CartEntry> Items { get; set; }
+        public Cart Cart { get; set; }
+
+        public CartViewModel(ICartService cartService)
         {
+            _cartService = cartService;
+
             Title = "Carrinho";
             Items = new ObservableCollection<CartEntry>();
+            Cart = _cartService.GetCart();
         }
 
         public void LoadItems()
@@ -24,7 +31,7 @@ namespace MyOrders.ViewModels
             try
             {
                 Items.Clear();
-                foreach (var item in App.Cart.Entries)
+                foreach (var item in Cart.Entries)
                 {
                     Items.Add(item);
                 }
@@ -37,6 +44,12 @@ namespace MyOrders.ViewModels
             {
                 IsBusy = false;
             }
+        }
+
+        public void ClearCart()
+        {
+            _cartService.ClearCart();
+            Cart = _cartService.GetCart();
         }
     }
 }
