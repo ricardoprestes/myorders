@@ -1,6 +1,9 @@
 ﻿using System.Linq;
+using MyOrders.Helpers;
 using MyOrders.Models;
 using MyOrders.Services.Abstractions;
+using Newtonsoft.Json;
+using Xamarin.Essentials;
 
 namespace MyOrders.Services
 {
@@ -52,6 +55,19 @@ namespace MyOrders.Services
             }
 
             return 0;
+        }
+
+        public void ClearCart()
+        {
+            Preferences.Remove(Constants.CART);
+        }
+
+        public Cart GetCart()
+        {
+            if(Preferences.ContainsKey(Constants.CART))
+                return JsonConvert.DeserializeObject<Cart>(Preferences.Get(Constants.CART, string.Empty));
+
+            return new Cart();
         }
 
         public void RemoveProduct(Cart cart, Product product)
