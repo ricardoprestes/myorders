@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <LinearLayout
+        android:id="@+id/ll_finish"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/primary"
+        android:padding="8dp"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/btn_buy"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="FINALIZAR A COMPRA"
+            android:background="#63CE59"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_cart_value"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:padding="8dp"
+        android:layout_above="@id/ll_finish"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@id/txv_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="22 UN"
+            android:gravity="end"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TOTAL"
+                android:gravity="start"/>
+
+            <TextView
+                android:id="@+id/txv_total_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="R$ 0,00"
+                android:gravity="end"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

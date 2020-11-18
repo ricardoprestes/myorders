@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MyOrders.Helpers;
 using MyOrders.Models;
 using MyOrders.Services.Abstractions;
+using Newtonsoft.Json;
 
 namespace MyOrders.ViewModels
 {
@@ -15,7 +16,6 @@ namespace MyOrders.ViewModels
         private readonly IProductService _productService;
         private readonly ICartService _cartService;
 
-        public Cart Cart { get; set; }
         public ObservableCollection<GroupItem> Items { get; set; }
         public List<Sale> Sales { get; set; }
         public List<Product> Products { get; set; }
@@ -28,7 +28,6 @@ namespace MyOrders.ViewModels
             _productService = productService;
             _cartService = cartService;
 
-            Cart = new Cart();
             Items = new ObservableCollection<GroupItem>();
             Sales = new List<Sale>();
             Products = new List<Product>();
@@ -71,10 +70,12 @@ namespace MyOrders.ViewModels
                 return;
 
             item.Count++;
-            _cartService.AddProduct(Cart, product);
+            _cartService.AddProduct(App.Cart, product);
             var sale = Sales.FirstOrDefault(s => s.CategoryId == product.CategoryId);
-            if(sale is not null)
-                item.Discount = _cartService.ApplyDiscount(Cart, product, sale);
+            if (sale is not null)
+                item.Discount = _cartService.ApplyDiscount(App.Cart, product, sale);
+
+            SaveCartData();
         }
 
         public void RemoveProduct(Product product)
@@ -86,11 +87,28 @@ namespace MyOrders.ViewModels
             if (item.Count > 0)
             {
                 item.Count--;
-                _cartService.RemoveProduct(Cart, product);
+                _cartService.RemoveProduct(App.Cart, product);
                 var sale = Sales.FirstOrDefault(s => s.CategoryId == product.CategoryId);
                 if (sale is not null)
-                    item.Discount = _cartService.ApplyDiscount(Cart, product, sale);
+                    item.Discount = _cartService.ApplyDiscount(App.Cart, product, sale);
+
+                SaveCartData();
             }
+        }
+
+        private void SaveCartData()
+        {
+            var json = JsonConvert.SerializeObject(App.
+                Cart);
+            //Preferences.Set(Constants.CART, json);
+        }
+
+        Cart GetCart()
+        {
+            //if (Preferences.ContainsKey(Constants.CART))
+            //    return JsonConvert.DeserializeObject<Cart>(Preferences.Get(Constants.CART, string.Empty));
+
+            return new Cart();
         }
     }
 }

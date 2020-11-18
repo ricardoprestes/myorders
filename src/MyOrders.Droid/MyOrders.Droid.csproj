@@ -177,6 +177,7 @@
     <Compile Include="Activities\BaseActivity.cs" />
     <Compile Include="Helpers\BaseRecycleViewAdapter.cs" />
     <Compile Include="Adapters\SaleProductAdapter.cs" />
+    <Compile Include="Activities\CartActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -221,6 +222,10 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\minus_circle_outline.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\activity_cart.xml">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

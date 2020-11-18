@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Android.Support.V4.Widget;
 using Android.Support.V7.Widget;
 using MyOrders.Droid.Adapters;
+using Android.Content;
 
 namespace MyOrders.Droid.Activities
 {
@@ -26,6 +27,8 @@ namespace MyOrders.Droid.Activities
         SaleProductAdapter _adapter;
         LinearLayout _llCartValue;
         Button _btnBuy;
+
+        bool _subscribeEvents = false;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -54,16 +57,28 @@ namespace MyOrders.Droid.Activities
             ShowCartValue();
             await LoadItemsAsync().ConfigureAwait(false);
 
-            _refresh.Refresh += OnRefresh;
-            _adapter.ItemClick += OnItemClick;
+            if (!_subscribeEvents)
+            {
+                _refresh.Refresh += OnRefresh;
+                _adapter.ItemClick += OnItemClick;
+                _btnBuy.Click += OnBuyClick;
+                _subscribeEvents = true;
+            }
         }
-
 
         protected override void OnStop()
         {
             base.OnStop();
             _refresh.Refresh -= OnRefresh;
             _adapter.ItemClick -= OnItemClick;
+            _btnBuy.Click -= OnBuyClick;
+            _subscribeEvents = false;
+        }
+
+        private void OnBuyClick(object sender, System.EventArgs e)
+        {
+            var intent = new Intent(this, typeof(CartActivity));
+            StartActivity(intent);
         }
 
         private async void OnRefresh(object sender, System.EventArgs e)
@@ -107,7 +122,7 @@ namespace MyOrders.Droid.Activities
 
         void ShowCartValue()
         {
-            var value = ViewModel.Cart.Total;
+            var value = App.Cart.Total;
             if (value > 0)
             {
                 _llCartValue.Visibility = Android.Views.ViewStates.Visible;
