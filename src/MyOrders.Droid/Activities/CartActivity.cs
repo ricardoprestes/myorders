@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using System;
+using Android.App;
 using Android.OS;
 using Android.Support.V7.Widget;
 using Android.Views;
@@ -15,7 +16,8 @@ namespace MyOrders.Droid.Activities
         public CartViewModel ViewModel { get; set; }
 
         TextView _txvAmount, _txvTotalValue;
-        CartEntryAdapter _adapter;
+        Button _btnFinishOrder;
+        bool _subscribeEvents = false;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -28,10 +30,11 @@ namespace MyOrders.Droid.Activities
 
             _txvAmount = FindViewById<TextView>(Resource.Id.txv_amount);
             _txvTotalValue = FindViewById<TextView>(Resource.Id.txv_total_value);
+            _btnFinishOrder = FindViewById<Button>(Resource.Id.btn_buy);
 
             var recyclerView = FindViewById<RecyclerView>(Resource.Id.rv_items);
             recyclerView.HasFixedSize = true;
-            recyclerView.SetAdapter(_adapter = new CartEntryAdapter(this, ViewModel));
+            recyclerView.SetAdapter(new CartEntryAdapter(this, ViewModel));
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -52,6 +55,44 @@ namespace MyOrders.Droid.Activities
             _txvAmount.Text = $"{App.Cart.Count} UN";
             _txvTotalValue.Text = $"{App.Cart.Total:R$ ###,###,##0.00}";
             ViewModel.LoadItems();
+            if (!_subscribeEvents)
+            {
+                _btnFinishOrder.Click += OnClick;
+                _subscribeEvents = true;
+            }
+        }
+
+        protected override void OnStop()
+        {
+            base.OnStop();
+            _btnFinishOrder.Click -= OnClick;
+            _subscribeEvents = false;
+        }
+
+        private void OnClick(object sender, EventArgs e)
+        {
+            ShowMessage();
+        }
+
+        private void ShowMessage()
+        {
+            var alert = new AlertDialog.Builder(this);
+            alert.SetTitle("Pedido finalizado");
+            alert.SetMessage("Seu pedido foi finalizado com sucesso!");
+
+            alert.SetPositiveButton("Ok", (senderAlert, args) =>
+            {
+                FinishOrder();
+            });
+
+            var dialog = alert.Create();
+            dialog.Show();
+        }
+
+        private void FinishOrder()
+        {
+            App.Cart = new Models.Cart();
+            Finish();
         }
     }
 }
