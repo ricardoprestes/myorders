@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Support.V4.Widget;
 using Android.Support.V7.Widget;
+using Android.Views;
 using Android.Widget;
 using MyOrders.Droid.Adapters;
 using MyOrders.Helpers;
@@ -26,6 +28,8 @@ namespace MyOrders.Droid.Activities
         SaleProductAdapter _adapter;
         LinearLayout _llCartValue;
         Button _btnBuy;
+
+        IMenu _menu;
 
         bool _subscribeEvents = false;
 
@@ -75,6 +79,25 @@ namespace MyOrders.Droid.Activities
             _subscribeEvents = false;
         }
 
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.main_menu, menu);
+            _menu = menu;
+            return base.OnCreateOptionsMenu(menu);
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            ExecuteMenuAction(item);
+            return base.OnOptionsItemSelected(item);
+        }
+
+        private void ExecuteMenuAction(IMenuItem item)
+        {
+            int id = item.ItemId - 1000;
+            var caregory = ViewModel.Categories.FirstOrDefault(c => c.Id == id);
+        }
+
         private void OnBuyClick(object sender, System.EventArgs e)
         {
             var intent = new Intent(this, typeof(CartActivity));
@@ -111,6 +134,7 @@ namespace MyOrders.Droid.Activities
         {
             _refresh.Refreshing = true;
             await ViewModel.LoadItemsAsync();
+            LoadMenu();
             _refresh.Refreshing = false;
         }
 
@@ -129,6 +153,15 @@ namespace MyOrders.Droid.Activities
             }
             else
                 _llCartValue.Visibility = Android.Views.ViewStates.Gone;
+        }
+
+        void LoadMenu()
+        {
+            _menu.Clear();
+            foreach (var item in ViewModel.Categories.OrderBy(c => c.Name))
+            {
+                _menu.Add(0, 1000 + item.Id, 0, item.Name);
+            }
         }
     }
 }

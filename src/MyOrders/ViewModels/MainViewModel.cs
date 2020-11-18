@@ -18,6 +18,7 @@ namespace MyOrders.ViewModels
         private readonly ICartService _cartService;
 
         public ObservableCollection<GroupItem> Items { get; set; }
+        public List<Category> Categories { get; set; }
         public List<Sale> Sales { get; set; }
         public List<Product> Products { get; set; }
         public Cart Cart { get; set; }
@@ -47,6 +48,7 @@ namespace MyOrders.ViewModels
 
             try
             {
+                Categories = await _apiService.GetCategories();
                 Sales = await _apiService.GetSales();
                 Products = await _apiService.GetProducts();
 
