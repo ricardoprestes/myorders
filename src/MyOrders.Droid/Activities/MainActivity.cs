@@ -32,6 +32,7 @@ namespace MyOrders.Droid.Activities
         IMenu _menu;
         bool _subscribeEvents = false;
         bool _apiRequest;
+        Category _category = null;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -98,8 +99,8 @@ namespace MyOrders.Droid.Activities
         private void ExecuteMenuAction(IMenuItem item)
         {
             int id = item.ItemId - 1000;
-            var category = ViewModel.Categories.FirstOrDefault(c => c.Id == id);
-            LoadItemsAsync(category);
+            _category = ViewModel.Categories.FirstOrDefault(c => c.Id == id);
+            LoadItemsAsync(_category);
         }
 
         private void OnBuyClick(object sender, System.EventArgs e)
@@ -139,7 +140,6 @@ namespace MyOrders.Droid.Activities
         {
             _refresh.Refreshing = true;
             await ViewModel.LoadItemsAsync(category);
-            LoadMenu();
             _refresh.Refreshing = false;
         }
 
@@ -155,7 +155,7 @@ namespace MyOrders.Droid.Activities
         async Task OnRefreshAsync()
         {
             await LoadDataAsync().ConfigureAwait(false);
-            await LoadItemsAsync().ConfigureAwait(false);
+            await LoadItemsAsync(_category).ConfigureAwait(false);
         }
 
         void ShowCartValue()
@@ -172,6 +172,9 @@ namespace MyOrders.Droid.Activities
 
         void LoadMenu()
         {
+            if (_menu is null)
+                return;
+
             _menu.Clear();
             _menu.Add(0, 1000, 0, "Todas");
             foreach (var item in ViewModel.Categories.OrderBy(c => c.Name))

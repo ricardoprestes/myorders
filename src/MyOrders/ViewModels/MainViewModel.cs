@@ -32,6 +32,7 @@ namespace MyOrders.ViewModels
             _cartService = cartService;
 
             Items = new ObservableCollection<GroupItem>();
+            Categories = new List<Category>();
             Sales = new List<Sale>();
             Products = new List<Product>();
             Title = "Catálogo";
@@ -40,8 +41,16 @@ namespace MyOrders.ViewModels
 
         public async Task LoadDataAsync()
         {
+
             if (IsBusy)
                 return;
+
+            var current = Connectivity.NetworkAccess;
+            if (current != NetworkAccess.Internet)
+            {
+                LoadCache();
+                return;
+            }
 
             IsBusy = true;
             Cart = _cartService.GetCart();
@@ -51,6 +60,7 @@ namespace MyOrders.ViewModels
                 Categories = await _apiService.GetCategories();
                 Sales = await _apiService.GetSales();
                 Products = await _apiService.GetProducts();
+                SaveCache();
             }
             catch (Exception ex)
             {
@@ -149,7 +159,6 @@ namespace MyOrders.ViewModels
             Preferences.Set(Constants.CART, json);
         }
 
-
         public void SetFavorite(Product product)
         {
             product.Favorite = !product.Favorite;
@@ -157,6 +166,30 @@ namespace MyOrders.ViewModels
                 Preferences.Set(product.ProductKey, true);
             else
                 Preferences.Remove(product.ProductKey);
+        }
+
+        void SaveCache()
+        {
+            var json = JsonConvert.SerializeObject(Categories);
+            Preferences.Set(Constants.CACHE_CATEGORIES, json);
+
+            json = JsonConvert.SerializeObject(Sales);
+            Preferences.Set(Constants.CACHE_SALES, json);
+
+            json = JsonConvert.SerializeObject(Products);
+            Preferences.Set(Constants.CACHE_PRODUCTS, json);
+        }
+
+        void LoadCache()
+        {
+            if (Preferences.ContainsKey(Constants.CACHE_CATEGORIES))
+                 Categories = JsonConvert.DeserializeObject<List<Category>>(Preferences.Get(Constants.CACHE_CATEGORIES, string.Empty));
+
+            if (Preferences.ContainsKey(Constants.CACHE_SALES))
+                Sales = JsonConvert.DeserializeObject<List<Sale>>(Preferences.Get(Constants.CACHE_SALES, string.Empty));
+
+            if (Preferences.ContainsKey(Constants.CACHE_PRODUCTS))
+                Products = JsonConvert.DeserializeObject<List<Product>>(Preferences.Get(Constants.CACHE_PRODUCTS, string.Empty));
         }
     }
 }
