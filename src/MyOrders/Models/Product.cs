@@ -11,5 +11,9 @@ namespace MyOrders.Models
         public decimal Price { get; set; }
         [JsonProperty("category_id")]
         public int? CategoryId { get; set; }
+        [JsonIgnore]
+        public bool Favorite { get; set; }
+        [JsonIgnore]
+        public string ProductKey => $"ProductId{Id}";
     }
 }
