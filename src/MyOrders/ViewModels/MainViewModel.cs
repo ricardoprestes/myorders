@@ -38,7 +38,7 @@ namespace MyOrders.ViewModels
             Cart = _cartService.GetCart();
         }
 
-        public async Task LoadItemsAsync()
+        public async Task LoadDataAsync()
         {
             if (IsBusy)
                 return;
@@ -51,9 +51,31 @@ namespace MyOrders.ViewModels
                 Categories = await _apiService.GetCategories();
                 Sales = await _apiService.GetSales();
                 Products = await _apiService.GetProducts();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        public async Task LoadItemsAsync(Category category)
+        {
+            if (IsBusy)
+                return;
+
+            IsBusy = true;
+
+            try
+            {
+                var sales = category is null ? Sales : Sales.Where(s => s.CategoryId == category.Id).ToList();
+                var products = category is null ? Products : Products.Where(p => p.CategoryId == category.Id).ToList();
 
                 Items.Clear();
-                var items = await _productService.GetGroupedProducts(Sales, Products);
+                var items = await _productService.GetGroupedProducts(sales, products);
                 foreach (var item in items)
                 {
                     if (item.Type == Enums.EGroupItemType.Product)

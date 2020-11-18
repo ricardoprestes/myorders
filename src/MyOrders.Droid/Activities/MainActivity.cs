@@ -9,6 +9,7 @@ using Android.Views;
 using Android.Widget;
 using MyOrders.Droid.Adapters;
 using MyOrders.Helpers;
+using MyOrders.Models;
 using MyOrders.Services.Abstractions;
 using MyOrders.ViewModels;
 
@@ -28,10 +29,9 @@ namespace MyOrders.Droid.Activities
         SaleProductAdapter _adapter;
         LinearLayout _llCartValue;
         Button _btnBuy;
-
         IMenu _menu;
-
         bool _subscribeEvents = false;
+        bool _apiRequest;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -53,12 +53,15 @@ namespace MyOrders.Droid.Activities
 
             _refresh = FindViewById<SwipeRefreshLayout>(Resource.Id.srl_items);
             _refresh.SetColorSchemeColors(Resource.Color.accent);
+            _apiRequest = true;
         }
 
         protected override async void OnStart()
         {
             base.OnStart();
             ShowCartValue();
+            if (_apiRequest)
+                await LoadDataAsync().ConfigureAwait(false);
             await LoadItemsAsync().ConfigureAwait(false);
 
             if (!_subscribeEvents)
@@ -95,7 +98,8 @@ namespace MyOrders.Droid.Activities
         private void ExecuteMenuAction(IMenuItem item)
         {
             int id = item.ItemId - 1000;
-            var caregory = ViewModel.Categories.FirstOrDefault(c => c.Id == id);
+            var category = ViewModel.Categories.FirstOrDefault(c => c.Id == id);
+            LoadItemsAsync(category);
         }
 
         private void OnBuyClick(object sender, System.EventArgs e)
@@ -131,16 +135,26 @@ namespace MyOrders.Droid.Activities
             ShowCartValue();
         }
 
-        private async Task LoadItemsAsync()
+        private async Task LoadItemsAsync(Category category = null)
         {
             _refresh.Refreshing = true;
-            await ViewModel.LoadItemsAsync();
+            await ViewModel.LoadItemsAsync(category);
             LoadMenu();
             _refresh.Refreshing = false;
         }
 
+        private async Task LoadDataAsync()
+        {
+            _refresh.Refreshing = true;
+            await ViewModel.LoadDataAsync();
+            LoadMenu();
+            _refresh.Refreshing = false;
+            _apiRequest = false;
+        }
+
         async Task OnRefreshAsync()
         {
+            await LoadDataAsync().ConfigureAwait(false);
             await LoadItemsAsync().ConfigureAwait(false);
         }
 
@@ -149,16 +163,17 @@ namespace MyOrders.Droid.Activities
             var value = ViewModel.Cart.Total;
             if (value > 0)
             {
-                _llCartValue.Visibility = Android.Views.ViewStates.Visible;
+                _llCartValue.Visibility = ViewStates.Visible;
                 _btnBuy.Text = $"Comprar {value:R$ ###,###,##0.00}";
             }
             else
-                _llCartValue.Visibility = Android.Views.ViewStates.Gone;
+                _llCartValue.Visibility = ViewStates.Gone;
         }
 
         void LoadMenu()
         {
             _menu.Clear();
+            _menu.Add(0, 1000, 0, "Todas");
             foreach (var item in ViewModel.Categories.OrderBy(c => c.Name))
             {
                 _menu.Add(0, 1000 + item.Id, 0, item.Name);
