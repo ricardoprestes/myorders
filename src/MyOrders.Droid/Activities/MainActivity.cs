@@ -1,12 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Support.V4.Widget;
 using Android.Support.V7.Widget;
+using Android.Views;
 using Android.Widget;
 using MyOrders.Droid.Adapters;
 using MyOrders.Helpers;
+using MyOrders.Models;
 using MyOrders.Services.Abstractions;
 using MyOrders.ViewModels;
 
@@ -26,8 +29,10 @@ namespace MyOrders.Droid.Activities
         SaleProductAdapter _adapter;
         LinearLayout _llCartValue;
         Button _btnBuy;
-
+        IMenu _menu;
         bool _subscribeEvents = false;
+        bool _apiRequest;
+        Category _category = null;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -49,12 +54,15 @@ namespace MyOrders.Droid.Activities
 
             _refresh = FindViewById<SwipeRefreshLayout>(Resource.Id.srl_items);
             _refresh.SetColorSchemeColors(Resource.Color.accent);
+            _apiRequest = true;
         }
 
         protected override async void OnStart()
         {
             base.OnStart();
             ShowCartValue();
+            if (_apiRequest)
+                await LoadDataAsync().ConfigureAwait(false);
             await LoadItemsAsync().ConfigureAwait(false);
 
             if (!_subscribeEvents)
@@ -73,6 +81,26 @@ namespace MyOrders.Droid.Activities
             _adapter.ItemClick -= OnItemClick;
             _btnBuy.Click -= OnBuyClick;
             _subscribeEvents = false;
+        }
+
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.main_menu, menu);
+            _menu = menu;
+            return base.OnCreateOptionsMenu(menu);
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            ExecuteMenuAction(item);
+            return base.OnOptionsItemSelected(item);
+        }
+
+        private void ExecuteMenuAction(IMenuItem item)
+        {
+            int id = item.ItemId - 1000;
+            _category = ViewModel.Categories.FirstOrDefault(c => c.Id == id);
+            LoadItemsAsync(_category);
         }
 
         private void OnBuyClick(object sender, System.EventArgs e)
@@ -108,16 +136,26 @@ namespace MyOrders.Droid.Activities
             ShowCartValue();
         }
 
-        private async Task LoadItemsAsync()
+        private async Task LoadItemsAsync(Category category = null)
         {
             _refresh.Refreshing = true;
-            await ViewModel.LoadItemsAsync();
+            await ViewModel.LoadItemsAsync(category);
             _refresh.Refreshing = false;
+        }
+
+        private async Task LoadDataAsync()
+        {
+            _refresh.Refreshing = true;
+            await ViewModel.LoadDataAsync();
+            LoadMenu();
+            _refresh.Refreshing = false;
+            _apiRequest = false;
         }
 
         async Task OnRefreshAsync()
         {
-            await LoadItemsAsync().ConfigureAwait(false);
+            await LoadDataAsync().ConfigureAwait(false);
+            await LoadItemsAsync(_category).ConfigureAwait(false);
         }
 
         void ShowCartValue()
@@ -125,11 +163,24 @@ namespace MyOrders.Droid.Activities
             var value = ViewModel.Cart.Total;
             if (value > 0)
             {
-                _llCartValue.Visibility = Android.Views.ViewStates.Visible;
+                _llCartValue.Visibility = ViewStates.Visible;
                 _btnBuy.Text = $"Comprar {value:R$ ###,###,##0.00}";
             }
             else
-                _llCartValue.Visibility = Android.Views.ViewStates.Gone;
+                _llCartValue.Visibility = ViewStates.Gone;
+        }
+
+        void LoadMenu()
+        {
+            if (_menu is null)
+                return;
+
+            _menu.Clear();
+            _menu.Add(0, 1000, 0, "Todas");
+            foreach (var item in ViewModel.Categories.OrderBy(c => c.Name))
+            {
+                _menu.Add(0, 1000 + item.Id, 0, item.Name);
+            }
         }
     }
 }
