@@ -64,6 +64,11 @@ namespace MyOrders.Droid.Adapters
                 else
                     vh.LlDiscount.Visibility = ViewStates.Invisible;
 
+                if (item.Product.Favorite)
+                    vh.ImbFavorite.SetImageResource(Resource.Drawable.star);
+                else
+                    vh.ImbFavorite.SetImageResource(Resource.Drawable.star_outline);
+
                 vh.CardItem.Visibility = ViewStates.Visible;
                 vh.TxtHeader.Visibility = ViewStates.Gone;
             }
