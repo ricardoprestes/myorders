@@ -58,7 +58,7 @@ namespace MyOrders.Droid.Adapters
                 vh.TxvAmount.Text = item.Count.ToString();
                 if(item.Discount > 0)
                 {
-                    vh.TxvDiscount.Text = $"{item.Discount.ToString("##0.0")}%";
+                    vh.TxvDiscount.Text = $"{item.Discount:##0.0}%";
                     vh.LlDiscount.Visibility = ViewStates.Visible;
                 }
                 else
