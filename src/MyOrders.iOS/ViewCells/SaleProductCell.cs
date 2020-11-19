@@ -8,6 +8,13 @@ namespace MyOrders.iOS
 {
     public partial class SaleProductCell : UITableViewCell
     {
+        public delegate void BtnDidClickDelegate(SaleProductCell cell, bool selected);
+        public event BtnDidClickDelegate BtnFavoriteClick;
+        public event BtnDidClickDelegate BtnAddClick;
+        public event BtnDidClickDelegate BtnRemoveClick;
+
+        bool _subscribedEvents = false;
+
         public SaleProductCell (IntPtr handle) : base (handle)
         {
         }
@@ -58,6 +65,40 @@ namespace MyOrders.iOS
             LblAmount.Hidden = isHeader;
             BtnAdd.Hidden = isHeader;
             BtnRemove.Hidden = isHeader;
+        }
+
+        public void SubscribeEvents()
+        {
+            if (!_subscribedEvents)
+            {
+                BtnFavorite.TouchUpInside += BtnFavoriteTouchUpInside;
+                BtnAdd.TouchUpInside += BtnAddTouchUpInside;
+                BtnRemove.TouchUpInside += BtnRemoveTouchUpInside;
+                _subscribedEvents = true;
+            }
+        }
+
+        public void UnsubscribeEvents()
+        {
+            BtnFavorite.TouchUpInside -= BtnFavoriteTouchUpInside;
+            BtnAdd.TouchUpInside -= BtnAddTouchUpInside;
+            BtnRemove.TouchUpInside -= BtnRemoveTouchUpInside;
+            _subscribedEvents = false;
+        }
+
+        private void BtnFavoriteTouchUpInside(object sender, EventArgs e)
+        {
+            BtnFavoriteClick?.Invoke(this, BtnFavorite.Selected);
+        }
+
+        private void BtnAddTouchUpInside(object sender, EventArgs e)
+        {
+            BtnAddClick?.Invoke(this, BtnAdd.Selected);
+        }
+
+        private void BtnRemoveTouchUpInside(object sender, EventArgs e)
+        {
+            BtnRemoveClick?.Invoke(this, BtnRemove.Selected);
         }
     }
 }
