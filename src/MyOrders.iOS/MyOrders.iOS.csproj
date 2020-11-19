@@ -141,13 +141,13 @@
     <Compile Include="ViewCells\SaleProductCell.designer.cs">
       <DependentUpon>SaleProductCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="ViewControllers\SaleProductTableViewController.cs" />
-    <Compile Include="ViewControllers\SaleProductTableViewController.designer.cs">
-      <DependentUpon>SaleProductTableViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="ViewControllers\CartViewController.cs" />
     <Compile Include="ViewControllers\CartViewController.designer.cs">
       <DependentUpon>CartViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\SaleProductViewController.cs" />
+    <Compile Include="ViewControllers\SaleProductViewController.designer.cs">
+      <DependentUpon>SaleProductViewController.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
