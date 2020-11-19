@@ -31,7 +31,7 @@ namespace MyOrders.iOS
             _refreshControl = new UIRefreshControl();
             _refreshControl.ValueChanged += RefreshControl_ValueChanged;
             TableView.Add(_refreshControl);
-            TableView.Source = new ItemsDataSource(ViewModel);
+            TableView.Source = new ItemsDataSource(ViewModel, TableView);
 
             Title = ViewModel.Title;
 
@@ -73,32 +73,44 @@ namespace MyOrders.iOS
 
     class ItemsDataSource : UITableViewSource
     {
-        readonly MainViewModel viewModel;
+        readonly MainViewModel _viewModel;
+        readonly UITableView _tableView;
 
-        public ItemsDataSource(MainViewModel viewModel)
+        public ItemsDataSource(MainViewModel viewModel, UITableView tableView)
         {
-            this.viewModel = viewModel;
+            _viewModel = viewModel;
+            _tableView = tableView;
         }
 
-        public override nint RowsInSection(UITableView tableview, nint section) => viewModel.Items.Count;
+        public override nint RowsInSection(UITableView tableview, nint section) => _viewModel.Items.Count;
 
         public override nint NumberOfSections(UITableView tableView) => 1;
+
+        public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+        {
+            var item = _viewModel.Items[indexPath.Row];
+            var height = item.Type == Enums.EGroupItemType.Product ? 120 : 40;
+            return height;
+        }
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
             var cell = tableView.DequeueReusableCell("SaleProductViewCell", indexPath) as SaleProductCell;
 
-            var item = viewModel.Items[indexPath.Row];
+            var item = _viewModel.Items[indexPath.Row];
             cell.SetValue(item);
-
+            cell.SubscribeEvents();
+            cell.BtnFavoriteClick += OnFavoriteClick;
             return cell;
         }
 
-        public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
+        private void OnFavoriteClick(SaleProductCell cell, bool selected)
         {
-            var item = viewModel.Items[indexPath.Row];
-            var height = item.Type == Enums.EGroupItemType.Product ? 120 : 40;
-            return height;
+            var indexPath = _tableView.IndexPathForCell(cell);
+            var item = _viewModel.Items[indexPath.Row];
+            _viewModel.SetFavorite(item.Product);
+            var index = new NSIndexPath[] { indexPath };
+            _tableView.ReloadRows(index, UITableViewRowAnimation.Automatic);
         }
     }
 }
