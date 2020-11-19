@@ -149,6 +149,10 @@
     <Compile Include="ViewControllers\SaleProductViewController.designer.cs">
       <DependentUpon>SaleProductViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewCells\CartEntryViewCell.cs" />
+    <Compile Include="ViewCells\CartEntryViewCell.designer.cs">
+      <DependentUpon>CartEntryViewCell.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyOrders\MyOrders.csproj">

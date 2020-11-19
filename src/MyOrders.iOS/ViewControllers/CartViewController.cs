@@ -21,7 +21,7 @@ namespace MyOrders.iOS
             base.ViewDidLoad();
             var cartService = ServiceLocator.Instance.Get<ICartService>();
             ViewModel = new CartViewModel(cartService);
-            TableView.Source = new CartDataSource(ViewModel, TableView);
+            TableView.Source = new CartDataSource(ViewModel);
             Title = ViewModel.Title;
         }
 
@@ -39,12 +39,10 @@ namespace MyOrders.iOS
     class CartDataSource : UITableViewSource
     {
         readonly CartViewModel _viewModel;
-        readonly UITableView _tableView;
 
-        public CartDataSource(CartViewModel viewModel, UITableView tableView)
+        public CartDataSource(CartViewModel viewModel)
         {
             _viewModel = viewModel;
-            _tableView = tableView;
         }
 
         public override nint RowsInSection(UITableView tableview, nint section) => _viewModel.Items.Count;
@@ -53,15 +51,9 @@ namespace MyOrders.iOS
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
-            var cell = tableView.DequeueReusableCell("CartEntryViewCell", indexPath);
-
+            var cell = tableView.DequeueReusableCell("CartEntryViewCell", indexPath) as CartEntryViewCell;
             var item = _viewModel.Items[indexPath.Row];
-            if (cell == null)
-            {
-                cell = new UITableViewCell(UITableViewCellStyle.Default, "CartEntryViewCell");
-            }
-
-            cell.TextLabel.Text = item.Product.Name;
+            cell.SetValues(item);
             return cell;
         }
     }
