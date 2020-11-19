@@ -100,15 +100,56 @@ namespace MyOrders.iOS
             var item = _viewModel.Items[indexPath.Row];
             cell.SetValue(item);
             cell.SubscribeEvents();
-            cell.BtnFavoriteClick += OnFavoriteClick;
+            UnsubscribeEvents(cell);
+            SubscribeEvents(cell);
             return cell;
+        }
+
+        private void SubscribeEvents(SaleProductCell cell)
+        {
+            cell.BtnFavoriteClick += OnFavoriteClick;
+            cell.BtnAddClick += OnAddClick;
+            cell.BtnRemoveClick += OnRemoveClick;
+        }
+
+        private void UnsubscribeEvents(SaleProductCell cell)
+        {
+            cell.BtnFavoriteClick -= OnFavoriteClick;
+            cell.BtnAddClick -= OnAddClick;
+            cell.BtnRemoveClick -= OnRemoveClick;
         }
 
         private void OnFavoriteClick(SaleProductCell cell, bool selected)
         {
             var indexPath = _tableView.IndexPathForCell(cell);
+            if (indexPath is null)
+                return;
+
             var item = _viewModel.Items[indexPath.Row];
             _viewModel.SetFavorite(item.Product);
+            var index = new NSIndexPath[] { indexPath };
+            _tableView.ReloadRows(index, UITableViewRowAnimation.Automatic);
+        }
+
+        private void OnAddClick(SaleProductCell cell, bool selected)
+        {
+            var indexPath = _tableView.IndexPathForCell(cell);
+            if (indexPath is null)
+                return;
+
+            var item = _viewModel.Items[indexPath.Row];
+            _viewModel.AddProduct(item.Product);
+            var index = new NSIndexPath[] { indexPath };
+            _tableView.ReloadRows(index, UITableViewRowAnimation.Automatic);
+        }
+
+        private void OnRemoveClick(SaleProductCell cell, bool selected)
+        {
+            var indexPath = _tableView.IndexPathForCell(cell);
+            if (indexPath is null)
+                return;
+            var item = _viewModel.Items[indexPath.Row];
+            _viewModel.RemoveProduct(item.Product);
             var index = new NSIndexPath[] { indexPath };
             _tableView.ReloadRows(index, UITableViewRowAnimation.Automatic);
         }
