@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using MyOrders.Helpers;
 using MyOrders.Models;
 using MyOrders.Services.Abstractions;
@@ -64,8 +65,15 @@ namespace MyOrders.Services
 
         public Cart GetCart()
         {
-            if(Preferences.ContainsKey(Constants.CART))
-                return JsonConvert.DeserializeObject<Cart>(Preferences.Get(Constants.CART, string.Empty));
+            try
+            {
+                if (Preferences.ContainsKey(Constants.CART))
+                    return JsonConvert.DeserializeObject<Cart>(Preferences.Get(Constants.CART, string.Empty));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             return new Cart();
         }
