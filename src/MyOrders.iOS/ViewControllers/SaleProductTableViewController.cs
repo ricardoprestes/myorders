@@ -105,6 +105,26 @@ namespace MyOrders.iOS
             return cell;
         }
 
+        public override nfloat GetHeightForFooter(UITableView tableView, nint section) => 60;
+
+        public override UIView GetViewForFooter(UITableView tableView, nint section)
+        {
+            var btnCart = new UIButton
+            {
+                BackgroundColor = UIColor.FromRGB(99, 206, 89),
+            };
+            btnCart.SetTitle("Teste", UIControlState.Normal);
+            btnCart.Frame = new CoreGraphics.CGRect(10, 10, 80, 40);
+            //btnCart.AddConstraint(new NSLayoutConstraint { })
+
+            var view = new UIView
+            {
+                BackgroundColor = UIColor.FromRGB(25, 118, 210)
+            };
+            view.Add(btnCart);
+            return view;
+        }
+
         private void SubscribeEvents(SaleProductCell cell)
         {
             cell.BtnFavoriteClick += OnFavoriteClick;
