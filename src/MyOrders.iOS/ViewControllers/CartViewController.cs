@@ -33,6 +33,36 @@ namespace MyOrders.iOS
             LblTotalValue.Text = $"{ViewModel.Cart.Total:R$ ###,###,##0.00}";
             ViewModel.LoadItems();
             TableView.ReloadData();
+            BtnFinishOrder.TouchUpInside += OnTouchUpInside;
+        }
+
+        public override void ViewDidDisappear(bool animated)
+        {
+            base.ViewDidDisappear(animated);
+            BtnFinishOrder.TouchUpInside -= OnTouchUpInside;
+        }
+
+        private void OnTouchUpInside(object sender, EventArgs e)
+        {
+            ShowMessage();
+        }
+
+        private void ClearCart()
+        {
+            ViewModel.ClearCart();
+            NavigationController.PopViewController(true);
+        }
+
+        private void ShowMessage()
+        {
+            var alert = UIAlertController.Create(
+                                            "Pedido finalizado",
+                                            "Seu pedido foi finalizado com sucesso!",
+                                            UIAlertControllerStyle.Alert);
+
+
+            alert.AddAction(UIAlertAction.Create("OK", UIAlertActionStyle.Default, action => ClearCart()));
+            PresentViewController(alert, true, null);
         }
     }
 

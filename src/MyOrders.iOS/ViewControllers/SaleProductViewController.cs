@@ -12,9 +12,7 @@ namespace MyOrders.iOS
 {
     public partial class SaleProductViewController : UIViewController
     {
-        bool _apiRequest;
         Category _category = null;
-
         UIRefreshControl _refreshControl;
         ItemsDataSource _itemsDataSource;
 
@@ -34,15 +32,13 @@ namespace MyOrders.iOS
             var cartService = ServiceLocator.Instance.Get<ICartService>();
 
             ViewModel = new MainViewModel(apiService, productService, cartService);
-            _apiRequest = true;
+            Title = ViewModel.Title;
 
             _refreshControl = new UIRefreshControl();
             _refreshControl.ValueChanged += RefreshControl_ValueChanged;
             TableView.Add(_refreshControl);
             _itemsDataSource = new ItemsDataSource(ViewModel, TableView);
             TableView.Source = _itemsDataSource;
-
-            Title = ViewModel.Title;
 
             ViewModel.Items.CollectionChanged += Items_CollectionChanged;
         }
@@ -67,14 +63,12 @@ namespace MyOrders.iOS
 
         private async Task ViewDidAppearAsync()
         {
-            if (_apiRequest)
-                await LoadDataAsync().ConfigureAwait(false);
+            await LoadDataAsync().ConfigureAwait(false);
             await LoadItemsAsync().ConfigureAwait(false);
         }
 
         private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            //InvokeOnMainThread(() => TableView.ReloadData());
             ShowCartValue();
         }
 
@@ -93,7 +87,6 @@ namespace MyOrders.iOS
         private async Task LoadDataAsync()
         {
             await ViewModel.LoadDataAsync().ConfigureAwait(false);
-            _apiRequest = false;
         }
 
         private void ShowCartValue()
