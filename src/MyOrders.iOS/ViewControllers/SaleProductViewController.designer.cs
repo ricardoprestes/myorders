@@ -20,6 +20,10 @@ namespace MyOrders.iOS
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIBarButtonItem MnuFilter { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UITableView TableView { get; set; }
 
         void ReleaseDesignerOutlets ()
@@ -27,6 +31,11 @@ namespace MyOrders.iOS
             if (BtnCart != null) {
                 BtnCart.Dispose ();
                 BtnCart = null;
+            }
+
+            if (MnuFilter != null) {
+                MnuFilter.Dispose ();
+                MnuFilter = null;
             }
 
             if (TableView != null) {

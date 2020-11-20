@@ -5,6 +5,7 @@ using MyOrders.Services.Abstractions;
 using MyOrders.ViewModels;
 using System;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Threading.Tasks;
 using UIKit;
 
@@ -46,6 +47,7 @@ namespace MyOrders.iOS
         public async override void ViewDidAppear(bool animated)
         {
             base.ViewDidAppear(animated);
+            MnuFilter.Clicked += MnuFilterOnClicked;
             _itemsDataSource.ItemAmountChanged += ItemAmountChange;
             await ViewDidAppearAsync().ConfigureAwait(false);
         }
@@ -53,7 +55,13 @@ namespace MyOrders.iOS
         public override void ViewDidDisappear(bool animated)
         {
             base.ViewDidDisappear(animated);
+            MnuFilter.Clicked -= MnuFilterOnClicked;
             _itemsDataSource.ItemAmountChanged -= ItemAmountChange;
+        }
+
+        private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            ShowCartValue();
         }
 
         private void ItemAmountChange(object sender, EventArgs e)
@@ -61,15 +69,15 @@ namespace MyOrders.iOS
             ShowCartValue();
         }
 
+        private void MnuFilterOnClicked(object sender, EventArgs e)
+        {
+            ShowFilterOptions();
+        }
+
         private async Task ViewDidAppearAsync()
         {
             await LoadDataAsync().ConfigureAwait(false);
             await LoadItemsAsync().ConfigureAwait(false);
-        }
-
-        private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            ShowCartValue();
         }
 
         private void RefreshControl_ValueChanged(object sender, EventArgs e)
@@ -102,6 +110,35 @@ namespace MyOrders.iOS
                 else
                     BtnCart.Hidden = true;
             });
+        }
+
+        private void ShowFilterOptions()
+        {
+            if (!ViewModel.Categories.Any())
+                return;
+
+            var actionSheetAlert = UIAlertController.Create(
+                                                        "Filtrar",
+                                                        "Selecione a categoria para filtar os produtos",
+                                                        UIAlertControllerStyle.ActionSheet);
+
+            actionSheetAlert.AddAction(UIAlertAction.Create("Todas", UIAlertActionStyle.Default, async (action) => await LoadItemsAsync(null)));
+
+            foreach (var category in ViewModel.Categories)
+            {
+                actionSheetAlert.AddAction(UIAlertAction.Create(category.Name, UIAlertActionStyle.Default, async (action) => await LoadItemsAsync(category)));
+            }
+
+            actionSheetAlert.AddAction(UIAlertAction.Create("Cancelar", UIAlertActionStyle.Cancel, (action) => { }));
+
+            UIPopoverPresentationController presentationPopover = actionSheetAlert.PopoverPresentationController;
+            if (presentationPopover != null)
+            {
+                presentationPopover.SourceView = this.View;
+                presentationPopover.PermittedArrowDirections = UIPopoverArrowDirection.Up;
+            }
+
+            PresentViewController(actionSheetAlert, true, null);
         }
     }
 
