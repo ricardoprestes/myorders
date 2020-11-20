@@ -1,55 +1,75 @@
-using System;
-using System.Collections.Specialized;
-using System.Threading.Tasks;
 using Foundation;
 using MyOrders.Helpers;
 using MyOrders.Models;
 using MyOrders.Services.Abstractions;
 using MyOrders.ViewModels;
+using System;
+using System.Collections.Specialized;
+using System.Threading.Tasks;
 using UIKit;
 
 namespace MyOrders.iOS
 {
-    public partial class SaleProductTableViewController : UITableViewController
+    public partial class SaleProductViewController : UIViewController
     {
-        bool _apiRequest;
         Category _category = null;
-
         UIRefreshControl _refreshControl;
+        ItemsDataSource _itemsDataSource;
 
         public MainViewModel ViewModel { get; set; }
 
-        public SaleProductTableViewController(IntPtr handle) : base(handle)
+
+        public SaleProductViewController (IntPtr handle) : base (handle)
         {
+        }
+
+        public override void ViewDidLoad()
+        {
+            base.ViewDidLoad();
+            BtnCart.Hidden = true;
             var apiService = ServiceLocator.Instance.Get<IApiService>();
             var productService = ServiceLocator.Instance.Get<IProductService>();
             var cartService = ServiceLocator.Instance.Get<ICartService>();
 
             ViewModel = new MainViewModel(apiService, productService, cartService);
-            _apiRequest = true;
+            Title = ViewModel.Title;
 
             _refreshControl = new UIRefreshControl();
             _refreshControl.ValueChanged += RefreshControl_ValueChanged;
             TableView.Add(_refreshControl);
-            TableView.Source = new ItemsDataSource(ViewModel, TableView);
+            _itemsDataSource = new ItemsDataSource(ViewModel, TableView);
+            TableView.Source = _itemsDataSource;
 
-            Title = ViewModel.Title;
-
-            //ViewModel.PropertyChanged += IsBusy_PropertyChanged;
-            //ViewModel.Items.CollectionChanged += Items_CollectionChanged; ;
+            ViewModel.Items.CollectionChanged += Items_CollectionChanged;
         }
 
-        public override async void ViewDidAppear(bool animated)
+        public async override void ViewDidAppear(bool animated)
         {
             base.ViewDidAppear(animated);
-            if (_apiRequest)
-                await LoadDataAsync().ConfigureAwait(false);
+            _itemsDataSource.ItemAmountChanged += ItemAmountChange;
+            await ViewDidAppearAsync().ConfigureAwait(false);
+        }
+
+        public override void ViewDidDisappear(bool animated)
+        {
+            base.ViewDidDisappear(animated);
+            _itemsDataSource.ItemAmountChanged -= ItemAmountChange;
+        }
+
+        private void ItemAmountChange(object sender, EventArgs e)
+        {
+            ShowCartValue();
+        }
+
+        private async Task ViewDidAppearAsync()
+        {
+            await LoadDataAsync().ConfigureAwait(false);
             await LoadItemsAsync().ConfigureAwait(false);
         }
 
         private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            InvokeOnMainThread(() => TableView.ReloadData());
+            ShowCartValue();
         }
 
         private void RefreshControl_ValueChanged(object sender, EventArgs e)
@@ -67,7 +87,21 @@ namespace MyOrders.iOS
         private async Task LoadDataAsync()
         {
             await ViewModel.LoadDataAsync().ConfigureAwait(false);
-            _apiRequest = false;
+        }
+
+        private void ShowCartValue()
+        {
+            var value = ViewModel.Cart.Total;
+            InvokeOnMainThread(() =>
+            {
+                if (value > 0)
+                {
+                    BtnCart.SetTitle($"Comprar {value:R$ ###,###,##0.00}", UIControlState.Normal);
+                    BtnCart.Hidden = false;
+                }
+                else
+                    BtnCart.Hidden = true;
+            });
         }
     }
 
@@ -75,6 +109,8 @@ namespace MyOrders.iOS
     {
         readonly MainViewModel _viewModel;
         readonly UITableView _tableView;
+
+        public event EventHandler ItemAmountChanged;
 
         public ItemsDataSource(MainViewModel viewModel, UITableView tableView)
         {
@@ -141,6 +177,7 @@ namespace MyOrders.iOS
             _viewModel.AddProduct(item.Product);
             var index = new NSIndexPath[] { indexPath };
             _tableView.ReloadRows(index, UITableViewRowAnimation.Automatic);
+            ItemAmountChanged?.Invoke(this, new EventArgs());
         }
 
         private void OnRemoveClick(SaleProductCell cell, bool selected)
@@ -152,6 +189,7 @@ namespace MyOrders.iOS
             _viewModel.RemoveProduct(item.Product);
             var index = new NSIndexPath[] { indexPath };
             _tableView.ReloadRows(index, UITableViewRowAnimation.Automatic);
+            ItemAmountChanged?.Invoke(this, new EventArgs());
         }
     }
 }

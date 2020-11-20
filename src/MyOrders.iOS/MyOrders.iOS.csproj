@@ -137,17 +137,21 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
-    <Compile Include="ViewControllers\ViewController.cs" />
-    <Compile Include="ViewControllers\ViewController.designer.cs">
-      <DependentUpon>ViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="ViewCells\SaleProductCell.cs" />
     <Compile Include="ViewCells\SaleProductCell.designer.cs">
       <DependentUpon>SaleProductCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="ViewControllers\SaleProductTableViewController.cs" />
-    <Compile Include="ViewControllers\SaleProductTableViewController.designer.cs">
-      <DependentUpon>SaleProductTableViewController.cs</DependentUpon>
+    <Compile Include="ViewControllers\CartViewController.cs" />
+    <Compile Include="ViewControllers\CartViewController.designer.cs">
+      <DependentUpon>CartViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\SaleProductViewController.cs" />
+    <Compile Include="ViewControllers\SaleProductViewController.designer.cs">
+      <DependentUpon>SaleProductViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewCells\CartEntryViewCell.cs" />
+    <Compile Include="ViewCells\CartEntryViewCell.designer.cs">
+      <DependentUpon>CartEntryViewCell.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
